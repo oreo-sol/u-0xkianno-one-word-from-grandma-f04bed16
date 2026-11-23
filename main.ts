@@ -27,6 +27,13 @@ if (TEXT !== TEXT.trim()) {
 if (/\s/.test(TEXT)) {
   throw new Error("entry must be exactly one word (no whitespace allowed)");
 }
+// Newline and control characters can never be part of a single word the
+// grandma would type — reject them explicitly, not just via whitespace.
+if (/[\n\r\t]/.test(TEXT) || [...TEXT].some((ch) => ch.charCodeAt(0) < 32)) {
+  throw new Error(
+    "entry must not contain newline or control characters (char code < 32)",
+  );
+}
 const words = TEXT.trim().split(/\s+/);
 if (words.length !== 1) {
   throw new Error(`entry must be exactly 1 word, got ${words.length}`);
